@@ -105,13 +105,89 @@ Linux-LVM-Storage-Management/
 ├── lvm_setup.sh
 └── screenshots/
     ├── lsblk.png
-    ├── pvs.png
-    ├── vgs.png
+    ├── lvs1.png
     ├── lvs.png
     └── mounted_lv.png
+# Part 2: Logical Volume Extension
+
+## Objective
+
+After creating and mounting the Logical Volume, the next task is to increase the available storage space without affecting existing data.
+
+## Checking Available Space
+
+Verify the current status of the Volume Group and Logical Volume.
+
+vgs
+lvs
+df -h
+
+Example Output:
+
+VG      VSize   VFree
+vgdata  10.00g  8.00g
+
+The `VFree` column shows the amount of free space available for extending the Logical Volume.
+
+## Extending the Logical Volume
+
+Increase the size of the Logical Volume by 2 GB.
+
+lvextend -L +2G /dev/vgdata/lvbackup
+
+Verify the new Logical Volume size:
+
+lvs
+
+## Extending the Filesystem
+
+### For XFS Filesystems
+
+xfs_growfs /backup
+
+### For EXT4 Filesystems
+
+resize2fs /dev/vgdata/lvbackup
+
+## Verifying the Changes
+
+Check the updated filesystem size:
+
+df -h
+
+Example:
+
+Before Extension: 2G
+After Extension : 4G
+
+## LVM Extension Workflow
+
+1. Verify available free space in the Volume Group.
+2. Extend the Logical Volume using `lvextend`.
+3. Resize the filesystem using `xfs_growfs` or `resize2fs`.
+4. Verify the new storage capacity using `df -h`.
+
+## Commands Used
+
+vgs
+lvs
+df -h
+lvextend -L +2G /dev/vgdata/lvbackup
+xfs_growfs /backup
+resize2fs /dev/vgdata/lvbackup
+
+
+## Skills Demonstrated
+
+* Logical Volume Management (LVM)
+* Storage Expansion
+* Filesystem Resizing
+* Capacity Management
+* Linux Storage Administration
+* Online Storage Growth
+
 
 ## Author
 
 Nandana Mohan J
-Linux System Administration Learning Project
 
